@@ -1,20 +1,33 @@
 const express = require('express')
+const expressHandlebars = require('express-handlebars')
 
 const app = express()
 
+app.engine('handlebars', expressHandlebars.engine({
+    defaultLayout: 'main',
+}))
+
+app.set('view engine', 'handlebars')
+
 const port = process.env.PORT || 3000
 
+app.get('/', (req, res) => {
+    res.render('home')
+})
+
+app.get('/about', (req, res) => {
+    res.render('about')
+})
+
 app.use((req, res) => {
-    res.type('text/plain')
     res.status(404)
-    res.send('404 - Not Found')
+    res.render('404')
 })
 
 app.use((err, req, res, next) => {
     console.error(err.message)
-    res.type('text/plain')
     res.status(500)
-    res.send('500 - Server Error')
+    res.render('500')
 })
 
 app.listen(port, () => console.log(
