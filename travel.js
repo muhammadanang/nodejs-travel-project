@@ -1,17 +1,8 @@
 const express = require('express')
 const expressHandlebars = require('express-handlebars')
+const fortune = require('./lib/fortune')
 
 const app = express()
-
-const fortunes = [
-    "Ada sama dimakan, tak ada sama ditahan",
-    "Bersatu kita teguh, bercerai kita runtuh",
-    "Cepat kaki ringan tangan",
-    "Dimana bumi dipijak, disana langit dijunjung",
-    "Fajar menyingsing elang menyongsong",
-    "Jauh berjalan banyak dilihat",
-    "Jauh di mata, dekat di hati"
-]
 
 app.engine('handlebars', expressHandlebars.engine({
     defaultLayout: 'main',
@@ -27,8 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)]
-    res.render('about', { fortune: randomFortune })
+    res.render('about', { fortune: fortune.getFortune() })
 })
 
 app.use((req, res) => {
