@@ -3,6 +3,7 @@ const expressHandlebars = require('express-handlebars')
 const fortune = require('./lib/fortune')
 const handlers = require('./lib/handlers')
 const bodyParser = require('body-parser')
+const multiparty = require('multiparty')
 
 const app = express()
 
@@ -35,6 +36,16 @@ app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankyou)
 
 app.get('/newsletter', handlers.newsletter)
 app.post('/api/newsletter-signup', handlers.api.newsletterSignup)
+
+app.get('/contest/vacation-photo', handlers.vacationPhotoContest)
+app.post('/contest/vacation-photo/:year/:month', (req, res) => {
+    const form = new multiparty.Form()
+    form.parse(req, (err, fields, files) => {
+        if (err) return res.status(500).send({ error: err.message })
+        handlers.vacationPhotoContestProcess(req, res, fields, files)
+    })
+})
+app.get('/contest/vacation-photo-thank-you', handlers.vacationPhotoContestProcessThankYou)
 
 app.use(handlers.notFound)
 
